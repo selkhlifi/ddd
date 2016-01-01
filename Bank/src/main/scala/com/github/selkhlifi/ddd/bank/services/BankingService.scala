@@ -2,6 +2,7 @@ package com.github.selkhlifi.ddd.bank.services
 
 
 import com.github.selkhlifi.ddd.bank.domain.BankAccount
+import com.github.selkhlifi.ddd.bank.domain.money.Money
 import com.github.selkhlifi.ddd.bank.repositories.BankAccountRepository
 
 class BankingService {
@@ -11,7 +12,7 @@ class BankingService {
   def withdraw(bankAccountNumber: String, amount: BigDecimal) = {
     val account = getAccount(bankAccountNumber)
     try {
-      account.withdraw(amount)
+      account.withdraw(Money(amount, account.currency))
     } catch {
       case _ : AssertionError => throw new BankAccountOverdraft(s"Bank account: $bankAccountNumber, amount: $amount")
       case ex : IllegalArgumentException => throw ex
@@ -21,10 +22,10 @@ class BankingService {
 
   def deposit(bankAccountNumber: String, amount: BigDecimal) = {
     val account = getAccount(bankAccountNumber)
-    account.deposit(amount)
+    account.deposit(Money(amount, account.currency))
   }
 
-  def balance(bankAccountNumber: String): BigDecimal = {
+  def balance(bankAccountNumber: String): Money = {
     val account = getAccount(bankAccountNumber)
     account.balance
   }

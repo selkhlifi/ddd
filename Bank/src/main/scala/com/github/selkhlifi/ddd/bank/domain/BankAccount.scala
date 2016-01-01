@@ -1,24 +1,31 @@
 package com.github.selkhlifi.ddd.bank.domain
 
-class BankAccount extends Cloneable {
+import java.util.Currency
 
-  type Balance = BigDecimal
+import com.github.selkhlifi.ddd.bank.domain.money.Money
+
+class BankAccount(val currency: Currency) extends Cloneable {
+  type Balance  = BigDecimal
+
+  var balance: Money = Money(0.0, currency)
+
   var accountNumber: String = _
-
-  var balance: Balance = 0.0
 
   //require : to test whether parameters of methods have legitimate values.
   //assume : to ensure that the result of methods are as expected.
-  def withdraw(amount: BigDecimal) = {
-    require(amount >= 0, "must withdraw positive amounts")
-    assume(balance - amount >= 0, "overdrafts not allowed")
+  def withdraw(money: Money) = {
+    require(money.amount >= 0.0, "must withdraw positive amounts")
+    require(money.currency == currency, "must withdraw same currency")
+    assume(balance.amount - money.amount >= 0, "overdrafts not allowed")
 
-    balance = balance - amount
+    balance = balance.subtract(money)
   }
 
-  def deposit(amount: BigDecimal) = {
-    require(amount >= 0.0, "must deposit positive amounts")
-    balance = balance + amount
+  def deposit(money: Money) = {
+    require(money.amount >= 0.0, "must deposit positive amounts")
+    require(money.currency == currency, "must deposit same currency")
+
+    balance = balance.add(money)
   }
 
   override def equals(obj: scala.Any): Boolean = {
@@ -26,7 +33,7 @@ class BankAccount extends Cloneable {
   }
 
   override def clone(): BankAccount = {
-    val clone = new BankAccount
+    val clone = new BankAccount(currency)
     clone.balance = this.balance
     clone.accountNumber = this.accountNumber
     clone
