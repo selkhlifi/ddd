@@ -9,20 +9,20 @@ class BankingService {
 
   private val ACCOUNTNUMBER_FORMAT_REGEXP = """[0-9]{3}\.[0-9]{3}""".r
 
-  def withdraw(bankAccountNumber: String, amount: BigDecimal) = {
+  def withdraw(bankAccountNumber: String, money: Money) = {
     val account = getAccount(bankAccountNumber)
     try {
-      account.withdraw(Money(amount, account.currency))
+      account.withdraw(money)
     } catch {
-      case _ : AssertionError => throw new BankAccountOverdraft(s"Bank account: $bankAccountNumber, amount: $amount")
+      case _ : AssertionError => throw new BankAccountOverdraft(s"Bank account: $bankAccountNumber, amount: $money")
       case ex : IllegalArgumentException => throw ex
       case ex : Throwable => throw new Error(s"Failed to register new bank account.$ex")
     }
   }
 
-  def deposit(bankAccountNumber: String, amount: BigDecimal) = {
+  def deposit(bankAccountNumber: String, money: Money) = {
     val account = getAccount(bankAccountNumber)
-    account.deposit(Money(amount, account.currency))
+    account.deposit(money)
   }
 
   def balance(bankAccountNumber: String): Money = {

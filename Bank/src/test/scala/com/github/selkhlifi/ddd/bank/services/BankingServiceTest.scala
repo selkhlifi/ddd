@@ -58,7 +58,7 @@ class BankingServiceTest extends FunSuite with BeforeAndAfterEach {
   test("When money is deposited to a bank account, the account balance " +
     "should increase accordingly") {
     bankingService.registerBankAccount(newBankAccount)
-    bankingService.deposit(BANK_ACCOUNT_NUMBER, 100.3)
+    bankingService.deposit(BANK_ACCOUNT_NUMBER, Money(100.3, CURRENCY))
     val theBalance = bankingService.balance(BANK_ACCOUNT_NUMBER)
 
     assert(theBalance.equals(Money(100.3, CURRENCY)))
@@ -66,28 +66,28 @@ class BankingServiceTest extends FunSuite with BeforeAndAfterEach {
   test("It should not be possible to deposit money using an " +
     "account number for witch there is no bank account") {
     intercept[BankAccountNotFound] {
-      bankingService.deposit(BANK_ACCOUNT_NUMBER, 100.0)
+      bankingService.deposit(BANK_ACCOUNT_NUMBER, Money(100.0, CURRENCY))
     }
   }
   test("When money is withdrawn from bank account, the " +
     "account balance should decrease accordingly") {
     bankingService.registerBankAccount(newBankAccount)
-    bankingService.deposit(BANK_ACCOUNT_NUMBER, 100.3)
-    bankingService.withdraw(BANK_ACCOUNT_NUMBER, 100.0)
+    bankingService.deposit(BANK_ACCOUNT_NUMBER, Money(100.3, CURRENCY))
+    bankingService.withdraw(BANK_ACCOUNT_NUMBER, Money(100.0, CURRENCY))
     assert(bankingService.balance(BANK_ACCOUNT_NUMBER).equals(Money(0.3, CURRENCY)))
 
   }
   test("It should not be possible to withdraw money using an " +
     "account number for witch there is no bank account") {
     intercept[BankAccountNotFound] {
-      bankingService.withdraw(BANK_ACCOUNT_NUMBER, 10.3)
+      bankingService.withdraw(BANK_ACCOUNT_NUMBER, Money(10.3, CURRENCY))
     }
   }
   test("It should not be possible to overdraft a bank account") {
     bankingService.registerBankAccount(newBankAccount)
-    bankingService.deposit(BANK_ACCOUNT_NUMBER, 100.3)
+    bankingService.deposit(BANK_ACCOUNT_NUMBER, Money(100.3, CURRENCY))
     intercept[BankAccountOverdraft] {
-      bankingService.withdraw(BANK_ACCOUNT_NUMBER, 200.4)
+      bankingService.withdraw(BANK_ACCOUNT_NUMBER, Money(200.4, CURRENCY))
     }
     assert(bankingService.balance(BANK_ACCOUNT_NUMBER).equals(Money(100.3, CURRENCY)))
   }
