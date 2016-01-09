@@ -15,7 +15,7 @@ class BankAccountTest extends FunSuite with BeforeAndAfterEach {
   override def beforeEach(): Unit = super.beforeEach()
 
   test("A new bank account should have a zero balance") {
-    assert(new BankAccount(CURRENCY).balance == 0.0)
+    assert(new BankAccount(CURRENCY).balance equals Money(0.0, CURRENCY))
   }
 
 
@@ -23,7 +23,7 @@ class BankAccountTest extends FunSuite with BeforeAndAfterEach {
     "the balance should increase accordingly") {
     val account = new BankAccount(CURRENCY)
     account.deposit(Money(10, CURRENCY))
-    assert(account.balance == 10)
+    assert(account.balance equals Money(10, CURRENCY))
   }
   test("It should not be possible to deposit a negative amount of money" +
     " to a bank account") {
@@ -34,7 +34,7 @@ class BankAccountTest extends FunSuite with BeforeAndAfterEach {
       assert(false)
     }
     val theBalance = account.balance
-    assert(theBalance == 0.0)
+    assert(theBalance equals Money(0.0, CURRENCY))
   }
   test("When money is withdrawn from a bank account, " +
     "the balance should decrease accordingly") {
@@ -43,7 +43,7 @@ class BankAccountTest extends FunSuite with BeforeAndAfterEach {
 
     account.withdraw(Money(50, CURRENCY))
 
-    assert(account.balance == 50)
+    assert(account.balance equals Money(50, CURRENCY))
   }
   test("It should not be possible to withdraw a negative amount of money" +
     " from a bank account") {
@@ -53,7 +53,7 @@ class BankAccountTest extends FunSuite with BeforeAndAfterEach {
       account.withdraw(Money(-50, CURRENCY))
       assert(false)
     }
-    assert(account.balance == 100)
+    assert(account.balance == Money(100, CURRENCY))
   }
   test("It should not be possible to overdraft a bank account") {
     val account = new BankAccount(CURRENCY)
@@ -61,7 +61,7 @@ class BankAccountTest extends FunSuite with BeforeAndAfterEach {
     intercept[AssertionError] {
       account.withdraw(Money(100, CURRENCY))
     }
-    assert(account.balance == 50)
+    assert(account.balance == Money(50, CURRENCY))
   }
   test("It should be possible to clone a bank account") {
     val accountNumber = "123-456"

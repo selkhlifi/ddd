@@ -7,6 +7,9 @@ object BankAccountRepository {
   var accounts : List[BankAccount] = List()
 
   def update(bankAccount: BankAccount) = {
+    if(!accounts.exists(_ equals bankAccount)) {
+      throw new AssertionError
+    }
     val index: Int = accounts.indexOf(bankAccount)
     accounts = accounts updated (index, bankAccount)
   }

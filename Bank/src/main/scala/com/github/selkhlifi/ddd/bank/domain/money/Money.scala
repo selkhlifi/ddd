@@ -4,13 +4,13 @@ import java.util.Currency
 
 case class Money(amount: BigDecimal, currency: Currency) {
 
-  def add(that: Money) = {
+  def +(that: Money) = {
     require(that.currency == currency,
       "must add same currency money")
     new Money(amount + that.amount, currency)
   }
 
-  def subtract(that: Money) = {
+  def -(that: Money) = {
     require(that.currency == currency,
       "must add subtract currency money")
     new Money(amount - that.amount, currency)

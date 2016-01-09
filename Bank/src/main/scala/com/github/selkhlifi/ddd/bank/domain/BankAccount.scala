@@ -4,6 +4,7 @@ import java.util.Currency
 
 import com.github.selkhlifi.ddd.bank.domain.money.Money
 
+
 class BankAccount(val currency: Currency) extends Cloneable {
   type Balance  = BigDecimal
 
@@ -18,18 +19,21 @@ class BankAccount(val currency: Currency) extends Cloneable {
     require(money.currency == currency, "must withdraw same currency")
     assume(balance.amount - money.amount >= 0, "overdrafts not allowed")
 
-    balance = balance.subtract(money)
+    balance = balance - money
   }
 
   def deposit(money: Money) = {
     require(money.amount >= 0.0, "must deposit positive amounts")
     require(money.currency == currency, "must deposit same currency")
 
-    balance = balance.add(money)
+    balance = balance + money
   }
 
   override def equals(obj: scala.Any): Boolean = {
-    this.accountNumber == obj.asInstanceOf[BankAccount].accountNumber
+    obj match {
+      case account: BankAccount => this.accountNumber == account.accountNumber
+      case _ => false
+    }
   }
 
   override def clone(): BankAccount = {

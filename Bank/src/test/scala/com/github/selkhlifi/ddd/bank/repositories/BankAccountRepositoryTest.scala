@@ -35,7 +35,7 @@ class BankAccountRepositoryTest extends FunSuite with BeforeAndAfterEach {
 
     val bankAccount2: BankAccount = new BankAccount(CURRENCY)
     bankAccount2.accountNumber = NEW_BANK_ACCOUNTNUMBER
-    intercept[AssertionError] {
+    intercept[BankAccountAlreadyExists] {
       BankAccountRepository.create(bankAccount2)
     }
   }
@@ -72,7 +72,7 @@ class BankAccountRepositoryTest extends FunSuite with BeforeAndAfterEach {
       .findBankAccountWithAccountNumber(NEW_BANK_ACCOUNTNUMBER)
     assert(theReadBankAccountOption.isDefined)
     assert(theReadBankAccountOption.get.accountNumber == NEW_BANK_ACCOUNTNUMBER)
-    assert(theReadBankAccountOption.get.balance.equals(Money(100.0, CURRENCY)))
+    assert(theReadBankAccountOption.get.balance == Money(100.0, CURRENCY))
   }
   test("It should not be possible to update a bank account that has not" +
     " been created earlier") {
