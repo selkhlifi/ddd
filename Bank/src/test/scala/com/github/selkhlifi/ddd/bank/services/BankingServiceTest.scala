@@ -17,6 +17,7 @@ class BankingServiceTest extends FunSuite with BeforeAndAfterEach {
 
   var bankingService: BankingService = _
   var newBankAccount: BankAccount = _
+
   override protected def beforeEach(): Unit ={
     bankingService = new BankingService
     BankAccountRepository.clear()

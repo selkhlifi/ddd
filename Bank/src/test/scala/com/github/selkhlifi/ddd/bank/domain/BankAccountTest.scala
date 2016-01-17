@@ -1,8 +1,7 @@
-package com.github.selkhlifi.ddd.bank
+package com.github.selkhlifi.ddd.bank.domain
 
 import java.util.Currency
 
-import com.github.selkhlifi.ddd.bank.domain.BankAccount
 import com.github.selkhlifi.ddd.bank.domain.money.Money
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
@@ -18,13 +17,13 @@ class BankAccountTest extends FunSuite with BeforeAndAfterEach {
     assert(new BankAccount(CURRENCY).balance equals Money(0.0, CURRENCY))
   }
 
-
   test("When money is deposited to a bank account, " +
     "the balance should increase accordingly") {
     val account = new BankAccount(CURRENCY)
     account.deposit(Money(10, CURRENCY))
     assert(account.balance equals Money(10, CURRENCY))
   }
+
   test("It should not be possible to deposit a negative amount of money" +
     " to a bank account") {
     val account = new BankAccount(CURRENCY)
@@ -36,6 +35,7 @@ class BankAccountTest extends FunSuite with BeforeAndAfterEach {
     val theBalance = account.balance
     assert(theBalance equals Money(0.0, CURRENCY))
   }
+
   test("When money is withdrawn from a bank account, " +
     "the balance should decrease accordingly") {
     val account = new BankAccount(CURRENCY)
@@ -45,6 +45,7 @@ class BankAccountTest extends FunSuite with BeforeAndAfterEach {
 
     assert(account.balance equals Money(50, CURRENCY))
   }
+
   test("It should not be possible to withdraw a negative amount of money" +
     " from a bank account") {
     val account = new BankAccount(CURRENCY)
@@ -55,14 +56,16 @@ class BankAccountTest extends FunSuite with BeforeAndAfterEach {
     }
     assert(account.balance == Money(100, CURRENCY))
   }
+
   test("It should not be possible to overdraft a bank account") {
     val account = new BankAccount(CURRENCY)
     account.deposit(Money(50, CURRENCY))
     intercept[AssertionError] {
       account.withdraw(Money(100, CURRENCY))
     }
-    assert(account.balance == Money(50, CURRENCY))
+    assert(account.balance.amount == 50)
   }
+
   test("It should be possible to clone a bank account") {
     val accountNumber = "123-456"
     val balance = 345.67
@@ -77,5 +80,4 @@ class BankAccountTest extends FunSuite with BeforeAndAfterEach {
     assert(clone.balance == bankAccount.balance)
     assert(clone.accountNumber == bankAccount.accountNumber)
   }
-
 }
